@@ -112,6 +112,10 @@ class AdbConnector:
         self._device_resolution = None
         self._device = None
 
+        self.width = self.screen_width()
+        self.height = self.screen_height()
+        print(f">>> Target phone sreen size is [{self.width} x {self.height}]")
+
     def _connect(self):
         """
         in my experience, it was better to connect, send commands, disconnect right away
@@ -166,6 +170,8 @@ class AdbConnector:
         :param wait_ms:
         :return:
         """
+        assert 0 <= x < self.width, "out of bound"
+        assert 0 <= y < self.height, "out of bound"
         self._connect()
         self._shell(f'{CMD_SHELL_TAP} {x:.0f} {y:.0f}')
         self.wait(wait_ms)
@@ -327,9 +333,7 @@ if __name__ == "__main__":
 
     connector.tap(1000, 2000)
     #connector.listen()
-    width = connector.screen_width()
-    height = connector.screen_height()
-    print(width, height)
+
     #connector.print_all_process_info()
 
     timeit(connector.get_screenshot, 2, True, True)
